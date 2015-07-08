@@ -66,10 +66,11 @@ public class LeoTableModel<T extends AbstractRowModel> extends AbstractTableMode
     }
 
     public void removeRows(int firstRowIndex, int lastRowIndex) {
-        if (firstRowIndex < lastRowIndex) {
+        if (firstRowIndex > lastRowIndex) {
             throw new IllegalArgumentException("LastRowIndex " + lastRowIndex
                     + " must be greater or equal to " + firstRowIndex);
         }
+        
         if (model.size() <= lastRowIndex) {
             throw new StackOverflowError("The lastRowIndex " + lastRowIndex
                     + " must be less than row count " + model.size());
