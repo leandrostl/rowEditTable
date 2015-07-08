@@ -17,7 +17,6 @@ import java.io.IOException;
 import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.JMenuItem;
-import javax.swing.JPopupMenu;
 import javax.swing.JTable;
 
 /**
@@ -46,8 +45,7 @@ public class InsertRowsAction extends AbstractAction {
             @Override
             public void mousePressed(MouseEvent e) {
                 super.mousePressed(e);
-                if(e.getButton() == MouseEvent.BUTTON3) {
-                    System.err.println("botão: " + e.getButton());
+                if (e.getButton() == MouseEvent.BUTTON3) {
                     lastMouseLocation = e.getPoint();
                 }
             }
@@ -58,7 +56,8 @@ public class InsertRowsAction extends AbstractAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         final String commandString = e.getActionCommand();
-
+        final int rowCount = table.getRowCount();
+        final LeoTableModel model = (LeoTableModel) table.getModel();
         ActionCommands command;
 
         try {
@@ -66,57 +65,71 @@ public class InsertRowsAction extends AbstractAction {
         } catch (IllegalArgumentException ex) {
             return;
         }
+        
 
         switch (command) {
             case ADD_ROWS_AT_END: {
-                LeoTableModel model = (LeoTableModel) table.getModel();
-                int insertIndex = table.getRowCount();
-                model.insertRowsAt(insertIndex, 1);
-
-                selectRows(insertIndex, insertIndex);
+                model.insertRowsAt(rowCount, 1);
+                selectRows(rowCount, rowCount);
                 break;
             }
             case ADD_ROWS_AT_POSITION: {
-                LeoTableModel model = (LeoTableModel) table.getModel();
-                final int insertIndex = table.getSelectedRow() + 1;
-                model.insertRowsAt(insertIndex, 1);
+                Object source = e.getSource();
+                
+                
+                if (source instanceof JMenuItem) {
+                    int nearRow;
+                    if ((nearRow = table.rowAtPoint(lastMouseLocation) + 1) > -1) {
+                        model.insertRowsAt(nearRow, 1);
+                        selectRows(nearRow, nearRow);
+                    } else {
+                        model.insertRowsAt(rowCount, 1);
+                        selectRows(rowCount, rowCount);
+                    }
+                } else {
+                    final int insertIndex = table.getSelectedRow() + 1;
+                    if(insertIndex > 0) {
+                        model.insertRowsAt(insertIndex, 1);
+                        selectRows(insertIndex, insertIndex);
+                    } else {
+                        model.insertRowsAt(rowCount, 1);
+                        selectRows(rowCount, rowCount);
+                    }
+                }
+                
 
-                selectRows(insertIndex, insertIndex);
+                
+
+                
                 break;
             }
             case DUPLICATE_ROWS: {
-
-                LeoTableModel model = (LeoTableModel) table.getModel();
                 final int selectedRows[] = table.getSelectedRows();
 
                 final int insertIndex = selectedRows[selectedRows.length - 1] + 1;
                 List rows = model.getRows(selectedRows[0], insertIndex);
 
                 model.insertRowsAt(insertIndex, rows);
-
-                selectRows(insertIndex, rows.size() - 1);
+                selectRows(insertIndex, insertIndex + rows.size() - 1);
                 break;
             }
 
             case PASTE_ROWS_AT_END:
             case PASTE_ROWS_AT_POSITION: {
-                LeoTableModel model = (LeoTableModel) table.getModel();
-                System.err.println("Fonte: " + e.getSource());
                 try {
-                    String strCopy = (String) Toolkit.getDefaultToolkit()
+                    final String strCopy = (String) Toolkit.getDefaultToolkit()
                             .getSystemClipboard().getContents(this)
                             .getTransferData(DataFlavor.stringFlavor);
-                    final int rowCount = table.getRowCount();
-                    
-                    if (command == ActionCommands.PASTE_ROWS_AT_END) {                        
+
+                    if (command == ActionCommands.PASTE_ROWS_AT_END) {
                         insertAtIndex(model, rowCount, strCopy);
                     } else {
                         Object source = e.getSource();
-                        if (source instanceof JMenuItem) {                           
+                        if (source instanceof JMenuItem) {
                             int nearRow;
                             if ((nearRow = table.rowAtPoint(lastMouseLocation)) > -1) {
                                 insertAtIndex(model, nearRow, strCopy);
-                            } else {                                
+                            } else {
                                 insertAtIndex(model, rowCount, strCopy);
                             }
                         }
