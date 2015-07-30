@@ -5,8 +5,8 @@
  */
 package com.metrum.table.Main;
 
-import com.metrum.table.LeoTableFactory;
-import com.metrum.table.LeoTableModel;
+import com.metrum.table.RowTableFactory;
+import com.metrum.table.RowTableModel;
 import java.awt.BorderLayout;
 import java.awt.HeadlessException;
 import java.awt.event.WindowAdapter;
@@ -29,11 +29,11 @@ public class Main extends JPanel {
     }
 
     private void initComponents() {
-        LeoTableModel<TestModel> model
-                = new LeoTableModel<>(TestModel.class, TestModel.getColumns());
+        RowTableModel<TestModelRowModelAdapter> model
+                = new RowTableModel<>(TestModelRowModelAdapter.class, TestModelRowModelAdapter.getColumns());
         model.addRow();
 
-        JTable table = LeoTableFactory.newDefaultInstance(model);
+        JTable table = RowTableFactory.newDefaultInstance(model);
 
         JScrollPane scroller = new JScrollPane(table);
         table.setPreferredScrollableViewportSize(new java.awt.Dimension(500, 300));

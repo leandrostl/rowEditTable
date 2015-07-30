@@ -10,12 +10,12 @@ package com.metrum.table;
  * @author leandro.lima
  * @param <T>
  */
-public abstract class AbstractRowModel<T extends Cloneable> {
-    public abstract Object getValueAt(int columnIndex);
+public interface RowModel<T> {
+    public Object getValueAt(int columnIndex);
     
-    public abstract void setValueAt(int columnIndex, Object value);
+    public void setValueAt(int columnIndex, Object value);
     
-    protected abstract T fromString(String source);
+    public T fromString(String source);
     
-    public abstract T copy();
+    public T copy();
 }

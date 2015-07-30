@@ -38,7 +38,7 @@ public class ColumnResizeDecorator extends TableCellRendererDecorator {
                 = header.getFontMetrics(header.getFont());
         final TableColumn column = table.getColumnModel().getColumn(col);
         final Double headerBounds = headerFontMetrics.getStringBounds((String) column.getHeaderValue(), header.getGraphics()).getWidth();
-        final int headerWidth = headerBounds.intValue()*2 + columnPadding;
+        final int headerWidth = headerBounds.intValue() + columnPadding;
         column.setMaxWidth(Integer.MAX_VALUE);
         column.setMinWidth(headerWidth);
         int preferredWidth = headerWidth;
@@ -46,6 +46,7 @@ public class ColumnResizeDecorator extends TableCellRendererDecorator {
         for (int rowIndex = 0; rowIndex < table.getRowCount(); rowIndex++) {
             preferredWidth = Math.max(component.getPreferredSize().width,
                     preferredWidth);
+            
         }
 
         switch (mode) {

@@ -5,8 +5,7 @@
  */
 package com.metrum.table;
 
-import com.metrum.table.Main.TestModel;
-import com.metrum.table.action.CopyCutRowsAction;
+import com.metrum.table.action.CopyCutRemoveRowsAction;
 import com.metrum.table.action.InsertRowsAction;
 import com.metrum.table.editor.EditModeDecorator;
 import com.metrum.table.renderer.AlternateRowDecorator;
@@ -27,12 +26,12 @@ import javax.swing.table.TableColumn;
  *
  * @author leandro.lima
  */
-public final class LeoTableFactory {
+public final class RowTableFactory {
     
     
-    private LeoTableFactory(){};
+    private RowTableFactory(){};
     
-    public static JTable newDefaultInstance(LeoTableModel<TestModel> model) {
+    public static JTable newDefaultInstance(RowTableModel model) {
         JTable table = new JTable(model);
         
         table.setDefaultEditor(Double.class, 
@@ -52,17 +51,22 @@ public final class LeoTableFactory {
                             JLabel.CENTER, JLabel.CENTER));    
             
             column.setCellRenderer(new ColumnResizeDecorator(column.getCellRenderer(),
-                    ColumnResizeDecorator.ColumnResizeMode.NONE, 0));
+                    ColumnResizeDecorator.ColumnResizeMode.NONE, 35));
         }
         
-        table.registerKeyboardAction(new CopyCutRowsAction(table),
-                CopyCutRowsAction.ActionCommands.COPY.name(),
+        table.registerKeyboardAction(new CopyCutRemoveRowsAction(table),
+                CopyCutRemoveRowsAction.ActionCommands.COPY.name(),
                 KeyStroke.getKeyStroke(KeyEvent.VK_C,
                         KeyEvent.CTRL_MASK, false), JComponent.WHEN_FOCUSED);
         
-        table.registerKeyboardAction(new CopyCutRowsAction(table),
-                CopyCutRowsAction.ActionCommands.CUT.name(),
+        table.registerKeyboardAction(new CopyCutRemoveRowsAction(table),
+                CopyCutRemoveRowsAction.ActionCommands.CUT.name(),
                 KeyStroke.getKeyStroke(KeyEvent.VK_X,
+                        KeyEvent.CTRL_MASK, false), JComponent.WHEN_FOCUSED);
+        
+        table.registerKeyboardAction(new CopyCutRemoveRowsAction(table),
+                CopyCutRemoveRowsAction.ActionCommands.REMOVE.name(),
+                KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 
                         KeyEvent.CTRL_MASK, false), JComponent.WHEN_FOCUSED);
         
         table.registerKeyboardAction(new InsertRowsAction(table),
@@ -87,30 +91,42 @@ public final class LeoTableFactory {
                         KeyEvent.CTRL_MASK, false), JComponent.WHEN_FOCUSED);
         
         JPopupMenu popup = new JPopupMenu();
-        JMenuItem copyItem = new JMenuItem(new CopyCutRowsAction(table));
-        copyItem.setActionCommand(CopyCutRowsAction.ActionCommands.COPY.name());
+        
+        JMenuItem copyItem = new JMenuItem(new CopyCutRemoveRowsAction(table));
+        copyItem.setActionCommand(CopyCutRemoveRowsAction.ActionCommands.COPY.name());
         copyItem.setText("Copiar");
         popup.add(copyItem);
-        JMenuItem cutItem = new JMenuItem(new CopyCutRowsAction(table));        
-        cutItem.setActionCommand(CopyCutRowsAction.ActionCommands.CUT.name());
+        
+        JMenuItem cutItem = new JMenuItem(new CopyCutRemoveRowsAction(table));        
+        cutItem.setActionCommand(CopyCutRemoveRowsAction.ActionCommands.CUT.name());
         cutItem.setText("Cortar");
         popup.add(cutItem);
+        
+        JMenuItem removeItem = new JMenuItem(new CopyCutRemoveRowsAction(table));
+        removeItem.setActionCommand(CopyCutRemoveRowsAction.ActionCommands.REMOVE.name());
+        removeItem.setText("Remover linhas");
+        popup.add(removeItem);
+        
         JMenuItem pasteItem = new JMenuItem(new InsertRowsAction(table));
         pasteItem.setActionCommand(InsertRowsAction.ActionCommands.PASTE_ROWS_AT_POSITION.name());
         pasteItem.setText("Colar");
         popup.add(pasteItem);
+        
         JMenuItem addRowItem = new JMenuItem(new InsertRowsAction(table));
         addRowItem.setActionCommand(InsertRowsAction.ActionCommands.ADD_ROWS_AT_END.name());
         addRowItem.setText("Adicionar nova linha");
         popup.add(addRowItem);
+        
         JMenuItem insertRowItem = new JMenuItem(new InsertRowsAction(table));
         insertRowItem.setActionCommand(InsertRowsAction.ActionCommands.ADD_ROWS_AT_POSITION.name());
         insertRowItem.setText("Inserir nova linha aqui");
         popup.add(insertRowItem);
+        
         JMenuItem duplicateRows = new JMenuItem(new InsertRowsAction(table));
         duplicateRows.setActionCommand(InsertRowsAction.ActionCommands.DUPLICATE_ROWS.name());
         duplicateRows.setText("Duplicar linhas");
         popup.add(duplicateRows);
+        
         table.setComponentPopupMenu(popup);
         return table;
     }

@@ -5,7 +5,7 @@
  */
 package com.metrum.table.action;
 
-import com.metrum.table.LeoTableModel;
+import com.metrum.table.RowTableModel;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.datatransfer.DataFlavor;
@@ -57,7 +57,7 @@ public class InsertRowsAction extends AbstractAction {
     public void actionPerformed(ActionEvent e) {
         final String commandString = e.getActionCommand();
         final int rowCount = table.getRowCount();
-        final LeoTableModel model = (LeoTableModel) table.getModel();
+        final RowTableModel model = (RowTableModel) table.getModel();
         ActionCommands command;
 
         try {
@@ -143,7 +143,7 @@ public class InsertRowsAction extends AbstractAction {
         }
     }
 
-    private void insertAtIndex(LeoTableModel model, final int rowIndex, String strCopy) {
+    private void insertAtIndex(RowTableModel model, final int rowIndex, String strCopy) {
         model.insertRowsAt(rowIndex, strCopy);
         selectRows(rowIndex, rowIndex + strCopy.split("\n").length - 1);
     }

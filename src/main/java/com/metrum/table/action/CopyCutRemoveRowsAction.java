@@ -5,7 +5,7 @@
  */
 package com.metrum.table.action;
 
-import com.metrum.table.LeoTableModel;
+import com.metrum.table.RowTableModel;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
@@ -13,16 +13,16 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.JTable;
 
-public class CopyCutRowsAction extends AbstractAction {
+public class CopyCutRemoveRowsAction extends AbstractAction {
 
     public enum ActionCommands {
 
-        COPY, CUT
+        COPY, CUT, REMOVE
     }
 
     private final JTable table;
 
-    public CopyCutRowsAction(JTable table) {
+    public CopyCutRemoveRowsAction(JTable table) {
         this.table = table;
     }
 
@@ -31,20 +31,27 @@ public class CopyCutRowsAction extends AbstractAction {
 
         int firstSelectedRow = table.getSelectedRow();
         if (firstSelectedRow > -1 && isContinuous()) {
-            final String selectionString = getSelectionString();
 
-            if (e.getActionCommand().equals(ActionCommands.CUT.name())) {
-                LeoTableModel model = (LeoTableModel) table.getModel();
+            final String selectionString = getSelectionString();
+            
+            final boolean isCutCommand = e.getActionCommand().equals(ActionCommands.CUT.name());
+            final boolean isCopyCommand = e.getActionCommand().equals(ActionCommands.COPY.name());
+            final boolean isRemoveCommand = e.getActionCommand().equals(ActionCommands.REMOVE.name());
+
+            if (isCutCommand || isRemoveCommand) {
+                RowTableModel model = (RowTableModel) table.getModel();
                 final int selectedRows[] = table.getSelectedRows();
                 model.removeRows(selectedRows[0], selectedRows[selectedRows.length - 1]);
             }
 
-            StringSelection strSelection = new StringSelection(selectionString);
-            
-            final Clipboard clipboard = Toolkit.getDefaultToolkit()
-                    .getSystemClipboard();
-            clipboard.setContents(new StringSelection(""), null);
-            clipboard.setContents(strSelection, null);
+            if (isCutCommand || isCopyCommand) {
+                StringSelection strSelection = new StringSelection(selectionString);
+
+                final Clipboard clipboard = Toolkit.getDefaultToolkit()
+                        .getSystemClipboard();
+                clipboard.setContents(new StringSelection(""), null);
+                clipboard.setContents(strSelection, null);
+            }
         }
 
     }

@@ -10,6 +10,7 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.StringTokenizer;
+import javax.swing.event.TableModelEvent;
 import javax.swing.table.AbstractTableModel;
 
 /**
@@ -18,14 +19,28 @@ import javax.swing.table.AbstractTableModel;
  * @author leandro.lima
  * @param <T>
  */
-public class LeoTableModel<T extends AbstractRowModel> extends AbstractTableModel {
+public class RowTableModel<T extends RowModel> extends AbstractTableModel {
     private final LinkedList<ColumnContext> columns;
-    private final LinkedList<T> model = new LinkedList<>();
+    private LinkedList<T> model = new LinkedList<>();
     private final Class<T> rowType;
 
-    public LeoTableModel(Class<T> rowType, Collection<ColumnContext> columns) {
+    public RowTableModel(Class<T> rowType, Collection<ColumnContext> columns) {
         this.columns = new LinkedList<>(columns);
         this.rowType = rowType;
+    }
+
+    public Collection<T> getModel() {
+        return model;
+    }
+
+    public void setModel(Collection<T> model) {
+        this.model = new LinkedList<>(model);
+        fireTableChanged(new TableModelEvent(this));
+    }
+    
+    public void clear() {
+        this.model.clear();
+        fireTableChanged(new TableModelEvent(this));
     }
 
     @Override
@@ -93,10 +108,10 @@ public class LeoTableModel<T extends AbstractRowModel> extends AbstractTableMode
         }
 
         List<T> copy = new ArrayList<>();
-
-        model.subList(firstRowIndex, lastRowIndex).stream().forEach((element) -> {
+        for(T element : model.subList(firstRowIndex, lastRowIndex)) {
             copy.add((T) element.copy());
-        });
+        }
+        
         return copy;
     }
 
@@ -153,4 +168,7 @@ public class LeoTableModel<T extends AbstractRowModel> extends AbstractTableMode
 
         insertRowsAt(rowIndex, list);
     }
+
+    
+    
 }
