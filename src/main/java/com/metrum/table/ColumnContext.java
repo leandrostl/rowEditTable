@@ -14,11 +14,21 @@ public final class ColumnContext {
     private String name;
     private Class type;
     private boolean isEditable;
+    private boolean isAutoIncremented;
 
     public ColumnContext(String name, Class type, boolean isEditable) {
         this.name = name;
         this.type = type;
         this.isEditable = isEditable;
+        this.isAutoIncremented = false;
+    }
+    
+    public ColumnContext(String name, Class type, boolean isEditable, 
+            boolean isAutoIncremented) {
+        this.name = name;
+        this.type = type;
+        this.isEditable = isEditable;
+        this.isAutoIncremented = isAutoIncremented;
     }
 
     public String getName() {
@@ -43,6 +53,14 @@ public final class ColumnContext {
 
     public void isEditable(boolean isEditable) {
         this.isEditable = isEditable;
+    }
+
+    public boolean isAutoIncremented() {
+        return isAutoIncremented;
+    }
+
+    public void setAutoIncremented(boolean isAutoIncremented) {
+        this.isAutoIncremented = isAutoIncremented;
     }
     
     

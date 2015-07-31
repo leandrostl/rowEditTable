@@ -20,6 +20,7 @@ import javax.swing.table.AbstractTableModel;
  * @param <T>
  */
 public class RowTableModel<T extends RowModel> extends AbstractTableModel {
+
     private final LinkedList<ColumnContext> columns;
     private LinkedList<T> model = new LinkedList<>();
     private final Class<T> rowType;
@@ -37,7 +38,7 @@ public class RowTableModel<T extends RowModel> extends AbstractTableModel {
         this.model = new LinkedList<>(model);
         fireTableChanged(new TableModelEvent(this));
     }
-    
+
     public void clear() {
         this.model.clear();
         fireTableChanged(new TableModelEvent(this));
@@ -55,7 +56,11 @@ public class RowTableModel<T extends RowModel> extends AbstractTableModel {
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        return model.get(rowIndex).getValueAt(columnIndex);
+        if (columns.get(columnIndex).isAutoIncremented()) {
+            return rowIndex + 1;
+        } else {
+            return model.get(rowIndex).getValueAt(columnIndex);
+        }
     }
 
     @Override
@@ -85,7 +90,7 @@ public class RowTableModel<T extends RowModel> extends AbstractTableModel {
             throw new IllegalArgumentException("LastRowIndex " + lastRowIndex
                     + " must be greater or equal to " + firstRowIndex);
         }
-        
+
         if (model.size() <= lastRowIndex) {
             throw new StackOverflowError("The lastRowIndex " + lastRowIndex
                     + " must be less than row count " + model.size());
@@ -108,10 +113,10 @@ public class RowTableModel<T extends RowModel> extends AbstractTableModel {
         }
 
         List<T> copy = new ArrayList<>();
-        for(T element : model.subList(firstRowIndex, lastRowIndex)) {
+        for (T element : model.subList(firstRowIndex, lastRowIndex)) {
             copy.add((T) element.copy());
         }
-        
+
         return copy;
     }
 
@@ -159,7 +164,7 @@ public class RowTableModel<T extends RowModel> extends AbstractTableModel {
         ArrayList<T> list = new ArrayList<>();
         while (rowTokenizer.hasMoreTokens()) {
             try {
-                T element = (T)rowType.newInstance().fromString(rowTokenizer.nextToken());
+                T element = (T) rowType.newInstance().fromString(rowTokenizer.nextToken());
                 list.add(element);
             } catch (IllegalAccessException | InstantiationException ex) {
 
@@ -169,6 +174,4 @@ public class RowTableModel<T extends RowModel> extends AbstractTableModel {
         insertRowsAt(rowIndex, list);
     }
 
-    
-    
 }
