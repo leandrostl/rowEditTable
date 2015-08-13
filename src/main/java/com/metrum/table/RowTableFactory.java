@@ -7,7 +7,6 @@ package com.metrum.table;
 
 import com.metrum.table.action.CopyCutRemoveRowsAction;
 import com.metrum.table.action.InsertRowsAction;
-import com.metrum.table.editor.EditModeDecorator;
 import com.metrum.table.renderer.AlternateRowDecorator;
 import com.metrum.table.renderer.ColumnAlignmentDecorator;
 import com.metrum.table.renderer.ColumnResizeDecorator;
@@ -31,8 +30,6 @@ public final class RowTableFactory {
     private RowTableFactory() {
     }
 
-    ;
-    
     public static JTable newDefaultInstance(RowTableModel model) {
         JTable table = new JTable(model) {
             @Override
@@ -46,13 +43,9 @@ public final class RowTableFactory {
             }
         };
 
-        table.setDefaultEditor(Double.class,
-                new EditModeDecorator(table.getDefaultEditor(Double.class),
-                        EditModeDecorator.EditMode.SELECT_ON_FOCUS));
-
         for (int col = 0; col < table.getColumnCount(); col++) {
             final TableCellRenderer defaultRenderer =
-                     table.getDefaultRenderer(table.getColumnClass(col));
+                    table.getDefaultRenderer(table.getColumnClass(col));
             TableColumn column = table.getColumnModel().getColumn(col);
 
             column.setCellRenderer(
@@ -63,9 +56,9 @@ public final class RowTableFactory {
                     new ColumnAlignmentDecorator(column.getCellRenderer(),
                             JLabel.CENTER, JLabel.CENTER));
 
-            column.setCellRenderer(new ColumnResizeDecorator(column.
-                    getCellRenderer(),
-                    ColumnResizeDecorator.ColumnResizeMode.NONE, 35));
+//            column.setCellRenderer(
+//                    new ColumnResizeDecorator(column.getCellRenderer(),
+//                            ColumnResizeDecorator.ColumnResizeMode.NONE, 35));
         }
 
         table.registerKeyboardAction(new CopyCutRemoveRowsAction(table),
