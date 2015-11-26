@@ -9,7 +9,6 @@ import com.metrum.table.action.CopyCutRemoveRowsAction;
 import com.metrum.table.action.InsertRowsAction;
 import com.metrum.table.renderer.AlternateRowDecorator;
 import com.metrum.table.renderer.ColumnAlignmentDecorator;
-import com.metrum.table.renderer.ColumnResizeDecorator;
 import java.awt.Color;
 import java.awt.event.KeyEvent;
 import javax.swing.JComponent;
@@ -44,7 +43,7 @@ public final class RowTableFactory {
         };
 
         for (int col = 0; col < table.getColumnCount(); col++) {
-            final TableCellRenderer defaultRenderer =
+            final TableCellRenderer defaultRenderer = 
                     table.getDefaultRenderer(table.getColumnClass(col));
             TableColumn column = table.getColumnModel().getColumn(col);
 
