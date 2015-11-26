@@ -7,16 +7,21 @@ package com.metrum.table.Main;
 
 import com.metrum.table.RowTableFactory;
 import com.metrum.table.RowTableModel;
+import com.metrum.table.editor.EditModeDecorator;
+import com.metrum.table.editor.NumberDecorator;
 import java.awt.BorderLayout;
 import java.awt.HeadlessException;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import javax.swing.DefaultCellEditor;
+import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.table.TableCellEditor;
 
 /**
  *
@@ -33,7 +38,15 @@ public class Main extends JPanel {
                 = new RowTableModel<>(TestModelRowModelAdapter.class, TestModelRowModelAdapter.getColumns());
         model.addRow();
 
+        
+        
         JTable table = RowTableFactory.newDefaultInstance(model);
+        table.setDefaultEditor(Double.class,
+                new NumberDecorator(new DefaultCellEditor(new JFormattedTextField())));
+        
+        table.setDefaultEditor(Double.class,
+                new EditModeDecorator(table.getDefaultEditor(Double.class),
+                        EditModeDecorator.EditMode.SELECT_ON_FOCUS));
 
         JScrollPane scroller = new JScrollPane(table);
         table.setPreferredScrollableViewportSize(new java.awt.Dimension(500, 300));
