@@ -7,7 +7,6 @@ package com.metrum.table.renderer;
 
 import java.awt.Component;
 import javax.swing.AbstractButton;
-import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.JTextField;
@@ -45,15 +44,14 @@ public class ColumnAlignmentDecorator extends TableCellRendererDecorator {
             label.setVerticalAlignment(verticalAlignment);
         }
 
-        if (component instanceof JTextField) {
+        if (component instanceof JTextField)
             ((JTextField) component).setHorizontalAlignment(horizontalAlignment);
-        }        
 
         if (component instanceof AbstractButton) {
             final AbstractButton button = (AbstractButton) component;
             button.setHorizontalAlignment(horizontalAlignment);
             button.setVerticalAlignment(verticalAlignment);
-        }       
+        }
 
         return component;
     }
