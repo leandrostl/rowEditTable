@@ -9,6 +9,7 @@ import com.metrum.table.RowTableModel;
 import com.metrum.table.editor.EditModeDecorator;
 import com.metrum.table.renderer.AlternateRowDecorator;
 import com.metrum.table.renderer.ColumnAlignmentDecorator;
+import com.metrum.table.renderer.ColumnPaddingDecorator;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.HeadlessException;
@@ -63,7 +64,20 @@ public class Main2 extends JPanel {
             }
         };
 
-        for (int col = 0; col < table.getColumnCount(); col++) {
+        {
+            final TableCellRenderer defaultRenderer
+                    = table.getDefaultRenderer(table.getColumnClass(0));
+            TableColumn column = table.getColumnModel().getColumn(0);
+
+            column.setCellRenderer(new AlternateRowDecorator(defaultRenderer, Color.LIGHT_GRAY,
+                            1, 1));
+
+            column.setCellRenderer(new ColumnAlignmentDecorator(column.getCellRenderer(),
+                            JLabel.RIGHT, JLabel.CENTER));
+
+        }
+        
+        for (int col = 1; col < table.getColumnCount(); col++) {
             final TableCellRenderer defaultRenderer
                     = table.getDefaultRenderer(table.getColumnClass(col));
             TableColumn column = table.getColumnModel().getColumn(col);
@@ -74,8 +88,12 @@ public class Main2 extends JPanel {
 
             column.setCellRenderer(
                     new ColumnAlignmentDecorator(column.getCellRenderer(),
-                            JLabel.RIGHT, JLabel.CENTER));
+                            JLabel.LEFT, JLabel.CENTER));
+            
+            column.setCellRenderer(
+                    new ColumnPaddingDecorator(column.getCellRenderer(), 10, 50, 0, 5));
         }
+        
         table.setRowHeight(20);
         table.getTableHeader().setReorderingAllowed(false);
         table.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
