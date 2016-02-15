@@ -9,7 +9,9 @@ import com.metrum.table.action.CopyCutRemoveRowsAction;
 import com.metrum.table.action.InsertRowsAction;
 import com.metrum.table.renderer.AlternateRowDecorator;
 import com.metrum.table.renderer.ColumnAlignmentDecorator;
+import com.metrum.table.renderer.ColumnPaddingDecorator;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.event.KeyEvent;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -141,7 +143,19 @@ public final class RowTableFactory {
         popup.add(duplicateRows);
 
         table.setComponentPopupMenu(popup);
+        
         return table;
+    }
+    
+    public static void alignColumn(int col, int alignment, JTable table){
+        TableColumn column = table.getColumnModel().getColumn(col);
+       
+        column.setCellRenderer(
+                    new ColumnAlignmentDecorator(column.getCellRenderer(),
+                            alignment, JLabel.CENTER));
+        column.setCellRenderer(new ColumnPaddingDecorator(column.getCellRenderer(), 10, 10));
+        
+
     }
 
 }

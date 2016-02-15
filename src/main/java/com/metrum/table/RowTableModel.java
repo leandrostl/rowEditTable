@@ -24,7 +24,7 @@ public class RowTableModel<T extends RowModel> extends AbstractTableModel {
     private final LinkedList<ColumnContext> columns;
     private LinkedList<T> model = new LinkedList<>();
     private final Class<T> rowType;
-
+    
     public RowTableModel(Class<T> rowType, Collection<ColumnContext> columns) {
         this.columns = new LinkedList<>(columns);
         this.rowType = rowType;
