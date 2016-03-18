@@ -10,8 +10,8 @@ import com.metrum.table.action.InsertRowsAction;
 import com.metrum.table.renderer.AlternateRowDecorator;
 import com.metrum.table.renderer.ColumnAlignmentDecorator;
 import com.metrum.table.renderer.ColumnPaddingDecorator;
+import com.metrum.table.renderer.ColumnResizeDecorator;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.event.KeyEvent;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -43,23 +43,19 @@ public final class RowTableFactory {
                 return getPreferredSize().width < getParent().getWidth();
             }
         };
-
+        
         for (int col = 0; col < table.getColumnCount(); col++) {
-            final TableCellRenderer defaultRenderer = 
-                    table.getDefaultRenderer(table.getColumnClass(col));
+            final TableCellRenderer defaultRenderer = (new JTable()).getDefaultRenderer(table.getColumnClass(col));
             TableColumn column = table.getColumnModel().getColumn(col);
 
-            column.setCellRenderer(
-                    new AlternateRowDecorator(defaultRenderer, Color.LIGHT_GRAY,
-                            1, 1));
+            column.setCellRenderer(new AlternateRowDecorator(defaultRenderer, Color.LIGHT_GRAY, 
+                    1, 1));
 
-            column.setCellRenderer(
-                    new ColumnAlignmentDecorator(column.getCellRenderer(),
+            column.setCellRenderer(new ColumnAlignmentDecorator(column.getCellRenderer(),
                             JLabel.CENTER, JLabel.CENTER));
 
-//            column.setCellRenderer(
-//                    new ColumnResizeDecorator(column.getCellRenderer(),
-//                            ColumnResizeDecorator.ColumnResizeMode.NONE, 35));
+            column.setCellRenderer(new ColumnResizeDecorator(column.getCellRenderer(),
+                            ColumnResizeDecorator.ColumnResizeMode.NONE, 35));
         }
 
         table.registerKeyboardAction(new CopyCutRemoveRowsAction(table),
@@ -101,44 +97,37 @@ public final class RowTableFactory {
         JPopupMenu popup = new JPopupMenu();
 
         JMenuItem copyItem = new JMenuItem(new CopyCutRemoveRowsAction(table));
-        copyItem.setActionCommand(CopyCutRemoveRowsAction.ActionCommands.COPY.
-                name());
+        copyItem.setActionCommand(CopyCutRemoveRowsAction.ActionCommands.COPY.name());
         copyItem.setText("Copiar");
         popup.add(copyItem);
 
         JMenuItem cutItem = new JMenuItem(new CopyCutRemoveRowsAction(table));
-        cutItem.setActionCommand(CopyCutRemoveRowsAction.ActionCommands.CUT.
-                name());
+        cutItem.setActionCommand(CopyCutRemoveRowsAction.ActionCommands.CUT.name());
         cutItem.setText("Cortar");
         popup.add(cutItem);
 
         JMenuItem removeItem = new JMenuItem(new CopyCutRemoveRowsAction(table));
-        removeItem.setActionCommand(
-                CopyCutRemoveRowsAction.ActionCommands.REMOVE.name());
+        removeItem.setActionCommand(CopyCutRemoveRowsAction.ActionCommands.REMOVE.name());
         removeItem.setText("Remover linhas");
         popup.add(removeItem);
 
         JMenuItem pasteItem = new JMenuItem(new InsertRowsAction(table));
-        pasteItem.setActionCommand(
-                InsertRowsAction.ActionCommands.PASTE_ROWS_AT_POSITION.name());
+        pasteItem.setActionCommand(InsertRowsAction.ActionCommands.PASTE_ROWS_AT_POSITION.name());
         pasteItem.setText("Colar");
         popup.add(pasteItem);
 
         JMenuItem addRowItem = new JMenuItem(new InsertRowsAction(table));
-        addRowItem.setActionCommand(
-                InsertRowsAction.ActionCommands.ADD_ROWS_AT_END.name());
+        addRowItem.setActionCommand(InsertRowsAction.ActionCommands.ADD_ROWS_AT_END.name());
         addRowItem.setText("Adicionar nova linha");
         popup.add(addRowItem);
 
         JMenuItem insertRowItem = new JMenuItem(new InsertRowsAction(table));
-        insertRowItem.setActionCommand(
-                InsertRowsAction.ActionCommands.ADD_ROWS_AT_POSITION.name());
+        insertRowItem.setActionCommand(InsertRowsAction.ActionCommands.ADD_ROWS_AT_POSITION.name());
         insertRowItem.setText("Inserir nova linha aqui");
         popup.add(insertRowItem);
 
         JMenuItem duplicateRows = new JMenuItem(new InsertRowsAction(table));
-        duplicateRows.setActionCommand(
-                InsertRowsAction.ActionCommands.DUPLICATE_ROWS.name());
+        duplicateRows.setActionCommand(InsertRowsAction.ActionCommands.DUPLICATE_ROWS.name());
         duplicateRows.setText("Duplicar linhas");
         popup.add(duplicateRows);
 
@@ -150,9 +139,8 @@ public final class RowTableFactory {
     public static void alignColumn(int col, int alignment, JTable table){
         TableColumn column = table.getColumnModel().getColumn(col);
        
-        column.setCellRenderer(
-                    new ColumnAlignmentDecorator(column.getCellRenderer(),
-                            alignment, JLabel.CENTER));
+        column.setCellRenderer(new ColumnAlignmentDecorator(column.getCellRenderer(),alignment, 
+                JLabel.CENTER));
         column.setCellRenderer(new ColumnPaddingDecorator(column.getCellRenderer(), 10, 10));
         
 
