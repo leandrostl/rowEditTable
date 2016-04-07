@@ -6,7 +6,6 @@
 package com.metrum.table.Main;
 
 import com.metrum.table.RowTableModel;
-import com.metrum.table.editor.EditModeDecorator;
 import com.metrum.table.renderer.AlternateRowDecorator;
 import com.metrum.table.renderer.ColumnAlignmentDecorator;
 import com.metrum.table.renderer.ColumnPaddingDecorator;
