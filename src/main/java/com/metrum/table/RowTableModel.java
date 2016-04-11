@@ -119,6 +119,15 @@ public class RowTableModel<T extends RowModel> extends AbstractTableModel {
 
         return copy;
     }
+    
+    public T getRow(int rowIndex) {
+        if (model.size() < rowIndex) {
+            throw new StackOverflowError("The lastRowIndex " + rowIndex
+                    + " must be less or equal to row count " + model.size());
+        }
+        
+        return model.get(rowIndex);
+    }
 
     public void addRow() {
         addRow(model.size());
