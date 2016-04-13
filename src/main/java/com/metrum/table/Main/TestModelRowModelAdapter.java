@@ -10,7 +10,7 @@ import com.metrum.table.ColumnContext;
 import static com.metrum.table.Utils.stringToDouble;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -22,7 +22,7 @@ public class TestModelRowModelAdapter implements RowModel<TestModelRowModelAdapt
 
     private final TestModel delegated;
 
-    private static final Pattern pattern
+    private static final Pattern PATTERN
             = Pattern.compile(
                     "(\\d*\\.\\d+)\\t"
                     + "(\\d*\\.\\d+)\\t"
@@ -33,20 +33,20 @@ public class TestModelRowModelAdapter implements RowModel<TestModelRowModelAdapt
                     + "(true|false)"
             );
 
-    private static final Collection<ColumnContext> columns = new ArrayList<>();
+    private static final List<ColumnContext> COLUMNS = new ArrayList<>();
 
     static {
-        columns.add(new ColumnContext("Current", Double.class, true));
-        columns.add(new ColumnContext("Voltage", Double.class, true));
-        columns.add(new ColumnContext("PF", Double.class, true));
-        columns.add(new ColumnContext("Phase", Double.class, true));
-        columns.add(new ColumnContext("Is Inductive", Boolean.class, true));
-        columns.add(new ColumnContext("Is Reactive", Boolean.class, true));
-        columns.add(new ColumnContext("Is Reverse", Boolean.class, true));
+        COLUMNS.add(new ColumnContext("Current", Double.class, true));
+        COLUMNS.add(new ColumnContext("Voltage", Double.class, true));
+        COLUMNS.add(new ColumnContext("PF", Double.class, true));
+        COLUMNS.add(new ColumnContext("Phase", Double.class, true));
+        COLUMNS.add(new ColumnContext("Is Inductive", Boolean.class, true));
+        COLUMNS.add(new ColumnContext("Is Reactive", Boolean.class, true));
+        COLUMNS.add(new ColumnContext("Is Reverse", Boolean.class, true));
     }
 
-    public static Collection<ColumnContext> getColumns() {
-        return columns;
+    public static List<ColumnContext> getColumns() {
+        return COLUMNS;
     }
 
     public TestModelRowModelAdapter() {
@@ -109,7 +109,7 @@ public class TestModelRowModelAdapter implements RowModel<TestModelRowModelAdapt
     @Override
     public TestModelRowModelAdapter fromString(String source) {
         TestModel model = new TestModel();
-        Matcher matcher = pattern.matcher(source);
+        Matcher matcher = PATTERN.matcher(source);
         if (matcher.find()) {
             model.setElementCurrent(stringToDouble(matcher.group(1)));
             model.setElementVoltage(stringToDouble(matcher.group(2)));

@@ -9,7 +9,7 @@ import com.metrum.table.ColumnContext;
 import com.metrum.table.RowModel;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -21,17 +21,17 @@ public class ExecutionRowModelAdapter implements RowModel<ExecutionRow> {
 
     private final ExecutionRow delegated;
 
-    private static final Pattern pattern
+    private static final Pattern PATTERN
             = Pattern.compile(
                     "(\\.+)\\t"
                     + "(\\.+)"
             );
-    
-    private static final Collection<ColumnContext> columns = new ArrayList<>();
+
+    private static final List<ColumnContext> COLUMNS = new ArrayList<>();
 
     static {
-        columns.add(new ColumnContext("Teste", String.class, false));
-        columns.add(new ColumnContext("Medidor 1", String.class, false));
+        COLUMNS.add(new ColumnContext("Teste", String.class, false));
+        COLUMNS.add(new ColumnContext("Medidor 1", String.class, false));
     }
 
     public ExecutionRowModelAdapter(ExecutionRow delegated) {
@@ -42,8 +42,8 @@ public class ExecutionRowModelAdapter implements RowModel<ExecutionRow> {
         this.delegated = new ExecutionRow();
     }
 
-    public static Collection<ColumnContext> getColumns() {
-        return columns;
+    public static List<ColumnContext> getColumns() {
+        return COLUMNS;
     }
 
     @Override
@@ -73,12 +73,12 @@ public class ExecutionRowModelAdapter implements RowModel<ExecutionRow> {
     @Override
     public ExecutionRow fromString(String source) {
         ExecutionRow model = new ExecutionRow();
-        Matcher matcher = pattern.matcher(source);
+        Matcher matcher = PATTERN.matcher(source);
         if (matcher.find()) {
             model.setIndex(matcher.group(1));
             model.setIndex(matcher.group(2));
         }
-        
+
         return model;
     }
 
@@ -90,9 +90,8 @@ public class ExecutionRowModelAdapter implements RowModel<ExecutionRow> {
     @Override
     public String toString() {
         final StringBuilder builder = new StringBuilder();
-        for(Field field: ExecutionRow.class.getDeclaredFields()) {
+        for (Field field : ExecutionRow.class.getDeclaredFields())
             builder.append(field.getName()).append("\t");
-        }
         builder.insert(builder.length() - 1, "\n");
         return builder.toString();
     }

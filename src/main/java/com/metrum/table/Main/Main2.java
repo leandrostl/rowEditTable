@@ -14,7 +14,7 @@ import java.awt.Color;
 import java.awt.HeadlessException;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.Collection;
+import java.util.List;
 import java.util.LinkedList;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -34,7 +34,7 @@ import javax.swing.table.TableColumn;
 public class Main2 extends JPanel {
 
     private final LinkedList<ExecutionRow> rawModel = new LinkedList<>();
-    private final Collection<ExecutionRowModelAdapter> adapterModel = new LinkedList<>();
+    private final List<ExecutionRowModelAdapter> adapterModel = new LinkedList<>();
 
     public Main2() {
 
@@ -69,13 +69,13 @@ public class Main2 extends JPanel {
             TableColumn column = table.getColumnModel().getColumn(0);
 
             column.setCellRenderer(new AlternateRowDecorator(defaultRenderer, Color.LIGHT_GRAY,
-                            1, 1));
+                    1, 1));
 
             column.setCellRenderer(new ColumnAlignmentDecorator(column.getCellRenderer(),
-                            JLabel.RIGHT, JLabel.CENTER));
+                    JLabel.RIGHT, JLabel.CENTER));
 
         }
-        
+
         for (int col = 1; col < table.getColumnCount(); col++) {
             final TableCellRenderer defaultRenderer
                     = table.getDefaultRenderer(table.getColumnClass(col));
@@ -88,11 +88,11 @@ public class Main2 extends JPanel {
             column.setCellRenderer(
                     new ColumnAlignmentDecorator(column.getCellRenderer(),
                             JLabel.LEFT, JLabel.CENTER));
-            
+
             column.setCellRenderer(
                     new ColumnPaddingDecorator(column.getCellRenderer(), 10, 50, 0, 5));
         }
-        
+
         table.setRowHeight(20);
         table.getTableHeader().setReorderingAllowed(false);
         table.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
