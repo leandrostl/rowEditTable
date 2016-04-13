@@ -5,8 +5,6 @@
  */
 package com.metrum.table;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -24,17 +22,17 @@ public class RowTableModel<T extends RowModel> extends AbstractTableModel {
     private final LinkedList<ColumnContext> columns;
     private LinkedList<T> model = new LinkedList<>();
     private final Class<T> rowType;
-    
-    public RowTableModel(Class<T> rowType, Collection<ColumnContext> columns) {
+
+    public RowTableModel(Class<T> rowType, List<ColumnContext> columns) {
         this.columns = new LinkedList<>(columns);
         this.rowType = rowType;
     }
 
-    public Collection<T> getModel() {
+    public List<T> getModel() {
         return model;
     }
 
-    public void setModel(Collection<T> model) {
+    public void setModel(List<T> model) {
         this.model = new LinkedList<>(model);
         fireTableChanged(new TableModelEvent(this));
     }
@@ -56,11 +54,10 @@ public class RowTableModel<T extends RowModel> extends AbstractTableModel {
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        if (columns.get(columnIndex).isAutoIncremented()) {
+        if (columns.get(columnIndex).isAutoIncremented())
             return rowIndex + 1;
-        } else {
+        else
             return model.get(rowIndex).getValueAt(columnIndex);
-        }
     }
 
     @Override
@@ -86,46 +83,39 @@ public class RowTableModel<T extends RowModel> extends AbstractTableModel {
     }
 
     public void removeRows(int firstRowIndex, int lastRowIndex) {
-        if (firstRowIndex > lastRowIndex) {
+        if (firstRowIndex > lastRowIndex)
             throw new IllegalArgumentException("LastRowIndex " + lastRowIndex
                     + " must be greater or equal to " + firstRowIndex);
-        }
 
-        if (model.size() <= lastRowIndex) {
+        if (model.size() <= lastRowIndex)
             throw new StackOverflowError("The lastRowIndex " + lastRowIndex
                     + " must be less than row count " + model.size());
-        }
 
-        for (int i = lastRowIndex; i >= firstRowIndex; i--) {
+        for (int i = lastRowIndex; i >= firstRowIndex; i--)
             model.remove(i);
-        }
         fireTableRowsDeleted(firstRowIndex, lastRowIndex);
     }
 
     public List<T> getRows(int firstRowIndex, int lastRowIndex) {
-        if (firstRowIndex > lastRowIndex) {
+        if (firstRowIndex > lastRowIndex)
             throw new IllegalArgumentException("LastRowIndex " + lastRowIndex
                     + " must be greater or equal to " + firstRowIndex);
-        }
-        if (model.size() < lastRowIndex) {
+        if (model.size() < lastRowIndex)
             throw new StackOverflowError("The lastRowIndex " + lastRowIndex
                     + " must be less or equal to row count " + model.size());
-        }
 
-        List<T> copy = new ArrayList<>();
-        for (T element : model.subList(firstRowIndex, lastRowIndex)) {
+        final LinkedList<T> copy = new LinkedList<>();
+        for (T element : model.subList(firstRowIndex, lastRowIndex))
             copy.add((T) element.copy());
-        }
 
         return copy;
     }
-    
+
     public T getRow(int rowIndex) {
-        if (model.size() < rowIndex) {
+        if (model.size() < rowIndex)
             throw new StackOverflowError("The lastRowIndex " + rowIndex
                     + " must be less or equal to row count " + model.size());
-        }
-        
+
         return model.get(rowIndex);
     }
 
@@ -147,38 +137,33 @@ public class RowTableModel<T extends RowModel> extends AbstractTableModel {
     }
 
     public void insertRowsAt(int rowIndex, int quantity) {
-        if (rowIndex > model.size()) {
+        if (rowIndex > model.size())
             throw new StackOverflowError("The rowIndex " + rowIndex
                     + " must be less or equal to row count " + model.size());
-        }
 
-        for (int i = 0; i < quantity; i++) {
+        for (int i = 0; i < quantity; i++)
             addRow(i + rowIndex);
-        }
     }
 
     public void insertRowsAt(int rowIndex, List<T> rows) {
-        if (rowIndex > model.size()) {
+        if (rowIndex > model.size())
             throw new StackOverflowError("The rowIndex " + rowIndex
                     + " must be less or equal to row count " + model.size());
-        }
 
-        for (int i = 0; i < rows.size(); i++) {
+        for (int i = 0; i < rows.size(); i++)
             addRow(rowIndex + i, rows.get(i));
-        }
     }
 
     public void insertRowsAt(int rowIndex, String rows) {
         StringTokenizer rowTokenizer = new StringTokenizer(rows, "\n");
-        ArrayList<T> list = new ArrayList<>();
-        while (rowTokenizer.hasMoreTokens()) {
+        final LinkedList<T> list = new LinkedList<>();
+        while (rowTokenizer.hasMoreTokens())
             try {
                 T element = (T) rowType.newInstance().fromString(rowTokenizer.nextToken());
                 list.add(element);
             } catch (IllegalAccessException | InstantiationException ex) {
 
             }
-        }
 
         insertRowsAt(rowIndex, list);
     }
