@@ -106,7 +106,7 @@ public class RowTableModel<T extends RowModel> extends AbstractTableModel {
 
         final LinkedList<T> copy = new LinkedList<>();
         for (T element : model.subList(firstRowIndex, lastRowIndex))
-            copy.add((T) element.copy());
+            copy.add(element);
 
         return copy;
     }
