@@ -5,6 +5,7 @@
  */
 package com.metrum.table.action;
 
+import com.metrum.table.RowModel;
 import com.metrum.table.RowTableModel;
 import java.awt.Point;
 import java.awt.Toolkit;
@@ -14,6 +15,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
+import java.util.LinkedList;
 import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.JMenuItem;
@@ -45,9 +47,8 @@ public class InsertRowsAction extends AbstractAction {
             @Override
             public void mousePressed(MouseEvent e) {
                 super.mousePressed(e);
-                if (e.getButton() == MouseEvent.BUTTON3) {
+                if (e.getButton() == MouseEvent.BUTTON3)
                     lastMouseLocation = e.getPoint();
-                }
             }
 
         });
@@ -65,7 +66,6 @@ public class InsertRowsAction extends AbstractAction {
         } catch (IllegalArgumentException ex) {
             return;
         }
-        
 
         switch (command) {
             case ADD_ROWS_AT_END: {
@@ -75,8 +75,7 @@ public class InsertRowsAction extends AbstractAction {
             }
             case ADD_ROWS_AT_POSITION: {
                 Object source = e.getSource();
-                
-                
+
                 if (source instanceof JMenuItem) {
                     int nearRow;
                     if ((nearRow = table.rowAtPoint(lastMouseLocation) + 1) > -1) {
@@ -88,7 +87,7 @@ public class InsertRowsAction extends AbstractAction {
                     }
                 } else {
                     final int insertIndex = table.getSelectedRow() + 1;
-                    if(insertIndex > 0) {
+                    if (insertIndex > 0) {
                         model.insertRowsAt(insertIndex, 1);
                         selectRows(insertIndex, insertIndex);
                     } else {
@@ -96,20 +95,18 @@ public class InsertRowsAction extends AbstractAction {
                         selectRows(rowCount, rowCount);
                     }
                 }
-                
 
-                
-
-                
                 break;
             }
             case DUPLICATE_ROWS: {
                 final int selectedRows[] = table.getSelectedRows();
 
                 final int insertIndex = selectedRows[selectedRows.length - 1] + 1;
-                List rows = model.getRows(selectedRows[0], insertIndex);
-
-                model.insertRowsAt(insertIndex, rows);
+                final List<RowModel> rows = model.getRows(selectedRows[0], insertIndex);
+                final List<RowModel> copy = new LinkedList<>();
+                for (RowModel row : rows)
+                    copy.add(row.copy());
+                model.insertRowsAt(insertIndex, copy);
                 selectRows(insertIndex, insertIndex + rows.size() - 1);
                 break;
             }
@@ -121,17 +118,16 @@ public class InsertRowsAction extends AbstractAction {
                             .getSystemClipboard().getContents(this)
                             .getTransferData(DataFlavor.stringFlavor);
 
-                    if (command == ActionCommands.PASTE_ROWS_AT_END) {
+                    if (command == ActionCommands.PASTE_ROWS_AT_END)
                         insertAtIndex(model, rowCount, strCopy);
-                    } else {
+                    else {
                         Object source = e.getSource();
                         if (source instanceof JMenuItem) {
                             int nearRow;
-                            if ((nearRow = table.rowAtPoint(lastMouseLocation)) > -1) {
+                            if ((nearRow = table.rowAtPoint(lastMouseLocation)) > -1)
                                 insertAtIndex(model, nearRow, strCopy);
-                            } else {
+                            else
                                 insertAtIndex(model, rowCount, strCopy);
-                            }
                         }
                     }
 
