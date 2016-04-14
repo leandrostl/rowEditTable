@@ -133,7 +133,7 @@ public class TestModelRowModelAdapter implements RowModel<TestModelRowModelAdapt
             for (Field field : fields) {
                 field.setAccessible(true);
                 try {
-                    field.set(clone, field.get(this));
+                    field.set(clone, field.get(delegated));
                 } catch (IllegalArgumentException | IllegalAccessException e) {
                 }
             }
