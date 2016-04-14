@@ -71,7 +71,7 @@ public class ExecutionRowModelAdapter implements RowModel<ExecutionRow> {
     }
 
     @Override
-    public ExecutionRow fromString(String source) {
+    public ExecutionRowModelAdapter fromString(String source) {
         ExecutionRow model = new ExecutionRow();
         Matcher matcher = PATTERN.matcher(source);
         if (matcher.find()) {
@@ -79,12 +79,25 @@ public class ExecutionRowModelAdapter implements RowModel<ExecutionRow> {
             model.setIndex(matcher.group(2));
         }
 
-        return model;
+        return new ExecutionRowModelAdapter(model);
     }
 
     @Override
-    public ExecutionRow copy() {
-        return new ExecutionRow(delegated.getIndex(), delegated.getValue());
+    public ExecutionRowModelAdapter copy() {
+        ExecutionRow clone = new ExecutionRow();
+
+        for (Class type = ExecutionRow.class; !type.equals(Object.class); type = type.getSuperclass()) {
+            Field[] fields = type.getDeclaredFields();
+            for (Field field : fields) {
+                field.setAccessible(true);
+                try {
+                    field.set(clone, field.get(delegated));
+                } catch (IllegalArgumentException | IllegalAccessException e) {
+                }
+            }
+        }
+        
+        return new ExecutionRowModelAdapter(clone);
     }
 
     @Override
