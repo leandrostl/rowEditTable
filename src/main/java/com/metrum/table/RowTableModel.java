@@ -104,11 +104,11 @@ public class RowTableModel<T extends RowModel> extends AbstractTableModel {
             throw new StackOverflowError("The lastRowIndex " + lastRowIndex
                     + " must be less or equal to row count " + model.size());
 
-        final LinkedList<T> copy = new LinkedList<>();
+        final LinkedList<T> rows = new LinkedList<>();
         for (T element : model.subList(firstRowIndex, lastRowIndex))
-            copy.add(element);
+            rows.add(element);
 
-        return copy;
+        return rows;
     }
 
     public T getRow(int rowIndex) {

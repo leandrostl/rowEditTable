@@ -8,14 +8,14 @@ package com.metrum.table;
 /**
  *
  * @author leandro.lima
- * @param <T>
+ * @param <V> Objeto adaptado (adaptable) pelo RowModel.
  */
-public interface RowModel<T> {
+public interface RowModel<V> {
     public Object getValueAt(int columnIndex);
     
     public void setValueAt(int columnIndex, Object value);
     
-    public T fromString(String source);
+    public RowModel<V> fromString(String adaptableStringRepresentation);
     
-    public T copy();
+    public RowModel<V> copy();
 }
