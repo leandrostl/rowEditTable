@@ -12,12 +12,30 @@ package com.metrum.table;
 public final class ColumnContext {
     
     private String name;
+    private String toolTip;
     private Class type;
     private boolean isEditable;
     private boolean isAutoIncremented;
 
+    public ColumnContext(String name, String toolTip, Class type, boolean isEditable, boolean isAutoIncremented) {
+        this.name = name;
+        this.toolTip = toolTip;
+        this.type = type;
+        this.isEditable = isEditable;
+        this.isAutoIncremented = isAutoIncremented;
+    }
+    
+    public ColumnContext(String name, String toolTip, Class type, boolean isEditable) {
+        this.name = name;
+        this.toolTip = toolTip;
+        this.type = type;
+        this.isEditable = isEditable;
+        this.isAutoIncremented = false;
+    }
+    
     public ColumnContext(String name, Class type, boolean isEditable) {
         this.name = name;
+        this.toolTip = null;
         this.type = type;
         this.isEditable = isEditable;
         this.isAutoIncremented = false;
@@ -26,6 +44,7 @@ public final class ColumnContext {
     public ColumnContext(String name, Class type, boolean isEditable, 
             boolean isAutoIncremented) {
         this.name = name;
+        this.toolTip = null;
         this.type = type;
         this.isEditable = isEditable;
         this.isAutoIncremented = isAutoIncremented;
@@ -39,6 +58,14 @@ public final class ColumnContext {
         this.name = name;
     }
 
+    public String getToolTip() {
+        return toolTip;
+    }
+
+    public void setToolTip(String toolTip) {
+        this.toolTip = toolTip;
+    }
+    
     public Class getType() {
         return type;
     }
