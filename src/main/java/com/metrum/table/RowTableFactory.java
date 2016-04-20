@@ -43,16 +43,20 @@ public final class RowTableFactory {
             }
         };
         
+        return setDefaultAttributes(table);
+    }
+
+    public static JTable setDefaultAttributes(JTable table) {
         for (int col = 0; col < table.getColumnCount(); col++) {
             final TableCellRenderer defaultRenderer = (new JTable()).getDefaultRenderer(table.getColumnClass(col));
             TableColumn column = table.getColumnModel().getColumn(col);
-
+            
             column.setCellRenderer(new AlternateRowDecorator(defaultRenderer, Color.LIGHT_GRAY, 
                     1, 1));
 
             column.setCellRenderer(new ColumnAlignmentDecorator(column.getCellRenderer(),
-                            JLabel.CENTER, JLabel.CENTER));
-
+                    JLabel.CENTER, JLabel.CENTER));
+            
 //            column.setCellRenderer(new ColumnResizeDecorator(column.getCellRenderer(),
 //                            ColumnResizeDecorator.ColumnResizeMode.NONE, 35));
         }
