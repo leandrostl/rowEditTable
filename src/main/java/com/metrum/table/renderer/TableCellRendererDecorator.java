@@ -15,15 +15,15 @@ import javax.swing.table.TableCellRenderer;
  */
 public abstract class TableCellRendererDecorator implements TableCellRenderer {
 
-    protected TableCellRenderer delagated;
+    protected TableCellRenderer delegated;
 
     public TableCellRendererDecorator(TableCellRenderer delagated) {
-        this.delagated = delagated;
+        this.delegated = delagated;
     }
 
     @Override
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-        return delagated.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+        return delegated.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
     }
 
 }
