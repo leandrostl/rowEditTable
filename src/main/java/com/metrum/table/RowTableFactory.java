@@ -10,7 +10,6 @@ import com.metrum.table.action.InsertRowsAction;
 import com.metrum.table.renderer.AlternateRowDecorator;
 import com.metrum.table.renderer.ColumnAlignmentDecorator;
 import com.metrum.table.renderer.ColumnPaddingDecorator;
-import com.metrum.table.renderer.ColumnResizeDecorator;
 import java.awt.Color;
 import java.awt.event.KeyEvent;
 import javax.swing.JComponent;
@@ -58,8 +57,8 @@ public final class RowTableFactory {
             column.setCellRenderer(new ColumnAlignmentDecorator(column.getCellRenderer(),
                     JLabel.CENTER, JLabel.CENTER));
             
-            column.setCellRenderer(new ColumnResizeDecorator(column.getCellRenderer(),
-                            ColumnResizeDecorator.ColumnResizeMode.NONE, 35));
+//            column.setCellRenderer(new ColumnResizeDecorator(column.getCellRenderer(),
+//                            ColumnResizeDecorator.ColumnResizeMode.NONE, 35));
         }
 
         table.registerKeyboardAction(new CopyCutRemoveRowsAction(table),
