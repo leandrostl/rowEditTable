@@ -42,11 +42,6 @@ public final class RowTableFactory {
                 return getPreferredSize().width < getParent().getWidth();
             }
         };
-        
-        return setDefaultAttributes(table);
-    }
-
-    public static JTable setDefaultAttributes(JTable table) {
         for (int col = 0; col < table.getColumnCount(); col++) {
             final TableCellRenderer defaultRenderer = (new JTable()).getDefaultRenderer(table.getColumnClass(col));
             TableColumn column = table.getColumnModel().getColumn(col);
@@ -60,6 +55,12 @@ public final class RowTableFactory {
 //            column.setCellRenderer(new ColumnResizeDecorator(column.getCellRenderer(),
 //                            ColumnResizeDecorator.ColumnResizeMode.NONE, 35));
         }
+        return table;
+      //  return setDefaultAttributes(table);
+    }
+
+    public static JTable setDefaultAttributes(JTable table) {
+        
 
         table.registerKeyboardAction(new CopyCutRemoveRowsAction(table),
                 CopyCutRemoveRowsAction.ActionCommands.COPY.name(),
