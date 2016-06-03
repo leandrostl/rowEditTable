@@ -123,9 +123,15 @@ public class InsertRowsAction extends AbstractAction {
                     else {
                         Object source = e.getSource();
                         if (source instanceof JMenuItem) {
-                            int nearRow;
+                            final int nearRow;
                             if ((nearRow = table.rowAtPoint(lastMouseLocation)) > -1)
                                 insertAtIndex(model, nearRow, strCopy);
+                            else
+                                insertAtIndex(model, rowCount, strCopy);
+                        } else {
+                            final int insertIndex;
+                            if ((insertIndex = table.getSelectedRow() + 1) > -1)
+                                insertAtIndex(model, insertIndex, strCopy);
                             else
                                 insertAtIndex(model, rowCount, strCopy);
                         }
