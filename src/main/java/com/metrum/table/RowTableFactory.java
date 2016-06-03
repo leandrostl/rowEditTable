@@ -51,12 +51,10 @@ public final class RowTableFactory {
 
             column.setCellRenderer(new ColumnAlignmentDecorator(column.getCellRenderer(),
                     JLabel.CENTER, JLabel.CENTER));
-            
-//            column.setCellRenderer(new ColumnResizeDecorator(column.getCellRenderer(),
-//                            ColumnResizeDecorator.ColumnResizeMode.NONE, 35));
+
         }
         return table;
-      //  return setDefaultAttributes(table);
+    
     }
 
     public static JTable setDefaultAttributes(JTable table) {
