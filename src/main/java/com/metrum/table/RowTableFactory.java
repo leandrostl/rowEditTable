@@ -43,11 +43,13 @@ public final class RowTableFactory {
                 return getPreferredSize().width < getParent().getWidth();
             }
         };
+        
         for (int col = 0; col < table.getColumnCount(); col++) {
-            final TableCellRenderer defaultRenderer = (new JTable()).getDefaultRenderer(table.getColumnClass(col));
+            final TableCellRenderer defaultRenderer = (new JTable()).getDefaultRenderer(table.
+                    getColumnClass(col));
             TableColumn column = table.getColumnModel().getColumn(col);
-            
-            column.setCellRenderer(new AlternateRowDecorator(defaultRenderer, Color.LIGHT_GRAY, 
+
+            column.setCellRenderer(new AlternateRowDecorator(defaultRenderer, Color.LIGHT_GRAY,
                     1, 1));
 
             column.setCellRenderer(new ColumnAlignmentDecorator(column.getCellRenderer(),
@@ -55,64 +57,78 @@ public final class RowTableFactory {
 
         }
         return table;
-    
+
+    }
+
+    public static void createDefaultRenderer(JTable table) {
+        for (int col = 0; col < table.getColumnCount(); col++) {
+            final TableCellRenderer defaultRenderer = (new JTable()).getDefaultRenderer(table.
+                    getColumnClass(col));
+            TableColumn column = table.getColumnModel().getColumn(col);
+            
+            column.setCellRenderer(new AlternateRowDecorator(defaultRenderer, Color.LIGHT_GRAY,
+                    1, 1));
+            
+            column.setCellRenderer(new ColumnAlignmentDecorator(column.getCellRenderer(),
+                    JLabel.CENTER, JLabel.CENTER));
+
+        }
     }
 
     public static JTable setDefaultAttributes(JTable table) {
-        
 
-          final JPopupMenu popup = new JPopupMenu();        
-        
-        setAction(new CopyCutRemoveRowsAction(table), "Copiar", 
-                CopyCutRemoveRowsAction.ActionCommands.COPY.name(), 
+        final JPopupMenu popup = new JPopupMenu();
+
+        setAction(new CopyCutRemoveRowsAction(table), "Copiar",
+                CopyCutRemoveRowsAction.ActionCommands.COPY.name(),
                 KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.CTRL_MASK, false), table, popup);
-        setAction(new CopyCutRemoveRowsAction(table), "Cortar", 
-                CopyCutRemoveRowsAction.ActionCommands.CUT.name(), 
+        setAction(new CopyCutRemoveRowsAction(table), "Cortar",
+                CopyCutRemoveRowsAction.ActionCommands.CUT.name(),
                 KeyStroke.getKeyStroke(KeyEvent.VK_X, KeyEvent.CTRL_MASK, false), table, popup);
-        setAction(new InsertRowsAction(table), "Colar", 
-                InsertRowsAction.ActionCommands.PASTE_ROWS_AT_POSITION.name(), 
+        setAction(new InsertRowsAction(table), "Colar",
+                InsertRowsAction.ActionCommands.PASTE_ROWS_AT_POSITION.name(),
                 KeyStroke.getKeyStroke(KeyEvent.VK_V, KeyEvent.CTRL_MASK, false), table, popup);
-        setAction(new InsertRowsAction(table), "Colar no Final", 
-                InsertRowsAction.ActionCommands.PASTE_ROWS_AT_END.name(), 
-                KeyStroke.getKeyStroke(KeyEvent.VK_V, KeyEvent.CTRL_MASK | KeyEvent.SHIFT_MASK, false), table, popup);
-        setAction(new CopyCutRemoveRowsAction(table), "Remover", 
-                CopyCutRemoveRowsAction.ActionCommands.REMOVE.name(), 
+        setAction(new InsertRowsAction(table), "Colar no Final",
+                InsertRowsAction.ActionCommands.PASTE_ROWS_AT_END.name(),
+                KeyStroke.getKeyStroke(KeyEvent.VK_V, KeyEvent.CTRL_MASK | KeyEvent.SHIFT_MASK,
+                        false), table, popup);
+        setAction(new CopyCutRemoveRowsAction(table), "Remover",
+                CopyCutRemoveRowsAction.ActionCommands.REMOVE.name(),
                 KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, KeyEvent.CTRL_MASK, false), table, popup);
-        setAction(new InsertRowsAction(table), "Adicionar Linha ao Final", 
-                InsertRowsAction.ActionCommands.ADD_ROWS_AT_END.name(), 
+        setAction(new InsertRowsAction(table), "Adicionar Linha ao Final",
+                InsertRowsAction.ActionCommands.ADD_ROWS_AT_END.name(),
                 KeyStroke.getKeyStroke(KeyEvent.VK_N, KeyEvent.CTRL_MASK, false), table, popup);
-        setAction(new InsertRowsAction(table), "Adicionar Linha na Posição", 
-                InsertRowsAction.ActionCommands.ADD_ROWS_AT_POSITION.name(), 
+        setAction(new InsertRowsAction(table), "Adicionar Linha na Posição",
+                InsertRowsAction.ActionCommands.ADD_ROWS_AT_POSITION.name(),
                 KeyStroke.getKeyStroke(KeyEvent.VK_DOWN,
-                KeyEvent.CTRL_MASK, false), table, popup);
-        setAction(new InsertRowsAction(table), "Duplicar Linhas", 
-                InsertRowsAction.ActionCommands.DUPLICATE_ROWS.name(), 
-                KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, KeyEvent.CTRL_MASK | KeyEvent.SHIFT_MASK, false), table, popup);
+                        KeyEvent.CTRL_MASK, false), table, popup);
+        setAction(new InsertRowsAction(table), "Duplicar Linhas",
+                InsertRowsAction.ActionCommands.DUPLICATE_ROWS.name(),
+                KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, KeyEvent.CTRL_MASK | KeyEvent.SHIFT_MASK,
+                        false), table, popup);
 
         table.setComponentPopupMenu(popup);
-        
+
         return table;
     }
-    
-    private static void setAction(final Action action, final String label, final String command, 
+
+    private static void setAction(final Action action, final String label, final String command,
             final KeyStroke keyStrokeCopy, JTable table, final JPopupMenu popup) {
         table.registerKeyboardAction(action, command, keyStrokeCopy, JComponent.WHEN_FOCUSED);
         final JMenuItem copyItem = new JMenuItem(action);
         copyItem.setActionCommand(command);
         copyItem.setAccelerator(keyStrokeCopy);
-        
+
         copyItem.setText(label);
         popup.add(copyItem);
     }
 
-    
-    public static void alignColumn(int col, int alignment, JTable table){
+    public static void alignColumn(int col, int alignment, JTable table) {
         TableColumn column = table.getColumnModel().getColumn(col);
-       
-        column.setCellRenderer(new ColumnAlignmentDecorator(column.getCellRenderer(),alignment, 
+
+        column.setCellRenderer(new ColumnAlignmentDecorator(column.getCellRenderer(), alignment,
                 JLabel.CENTER));
         column.setCellRenderer(new ColumnPaddingDecorator(column.getCellRenderer(), 10, 10));
-        
 
     }
 
