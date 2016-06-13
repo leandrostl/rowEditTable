@@ -38,6 +38,8 @@ public class Main extends JPanel {
         model.addRow();
 
         JTable table = RowTableFactory.newDefaultInstance(model);
+        RowTableFactory.createDefaultRenderer(table);
+        RowTableFactory.setDefaultAttributes(table);
         table.setDefaultEditor(Double.class,
                 new NumberDecorator(new DefaultCellEditor(new JFormattedTextField())));
 
