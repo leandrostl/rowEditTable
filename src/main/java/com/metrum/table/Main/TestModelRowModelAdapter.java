@@ -9,7 +9,7 @@ import com.metrum.table.RowModel;
 import com.metrum.table.ColumnContext;
 import static com.metrum.table.Utils.stringToDouble;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -26,6 +26,7 @@ public class TestModelRowModelAdapter implements RowModel<TestModelRowModelAdapt
             = Pattern.compile(
                     "(\\d*\\.\\d+)\\t"
                     + "(\\d*\\.\\d+)\\t"
+                    + "(\\w[1,3])\\t"
                     + "(\\d*\\.\\d+)\\t"
                     + "(\\d*\\.\\d+)\\t"
                     + "(true|false)\\t"
@@ -33,77 +34,85 @@ public class TestModelRowModelAdapter implements RowModel<TestModelRowModelAdapt
                     + "(true|false)"
             );
 
-    private static final List<ColumnContext> COLUMNS = new ArrayList<>();
+    static enum Column {
+        CURRENT(new ColumnContext("Current", Double.class, true)),
+        VOLTAGE(new ColumnContext("Voltage", Double.class, true)),
+        ELEMENTS(new ColumnContext("Elements", Elements.class, true)),
+        POWER_FACTOR(new ColumnContext("PF", Double.class, true)),
+        PHASE(new ColumnContext("Phase", Double.class, true)),
+        INDUCTIVE(new ColumnContext("Is Inductive", Boolean.class, true)),
+        REACTIVE(new ColumnContext("Is Reactive", Boolean.class, true)),
+        REVERSE(new ColumnContext("Is Reverse", Boolean.class, true));
 
-    static {
-        COLUMNS.add(new ColumnContext("Current", Double.class, true));
-        COLUMNS.add(new ColumnContext("Voltage", Double.class, true));
-        COLUMNS.add(new ColumnContext("PF", Double.class, true));
-        COLUMNS.add(new ColumnContext("Phase", Double.class, true));
-        COLUMNS.add(new ColumnContext("Is Inductive", Boolean.class, true));
-        COLUMNS.add(new ColumnContext("Is Reactive", Boolean.class, true));
-        COLUMNS.add(new ColumnContext("Is Reverse", Boolean.class, true));
+        private final ColumnContext context;
+
+        private Column(ColumnContext context) {
+            this.context = context;
+            CONTEXTS.add(context);
+        }
+
+        public ColumnContext getContext() {
+            return context;
+        }
+
+        public static LinkedList<ColumnContext> getColumns() {
+            return CONTEXTS;
+        }
     }
+    final static LinkedList<ColumnContext> CONTEXTS = new LinkedList<>();
 
     public static List<ColumnContext> getColumns() {
-        return COLUMNS;
+        return Column.getColumns();
     }
 
     public TestModelRowModelAdapter() {
         this.delegated = new TestModel();
     }
-    
+
     public TestModelRowModelAdapter(TestModel model) {
         this.delegated = model;
     }
 
     @Override
     public Object getValueAt(int columnIndex) {
-        switch (columnIndex) {
-            case 0:
-                return delegated.getElementCurrent();
-            case 1:
-                return delegated.getElementVoltage();
-            case 2:
-                return delegated.getPowerFactor();
-            case 3:
-                return delegated.getPhaseFromA();
-            case 4:
-                return delegated.isIsInductive();
-            case 5:
-                return delegated.isIsReactive();
-            case 6:
-                return delegated.isIsReverse();
-            default:
-                return null;
-        }
+        if (columnIndex == Column.CURRENT.ordinal())
+            return delegated.getElementCurrent();
+        if (columnIndex == Column.VOLTAGE.ordinal())
+            return delegated.getElementVoltage();
+        if (columnIndex == Column.ELEMENTS.ordinal())
+            return delegated.getElements();
+        if (columnIndex == Column.POWER_FACTOR.ordinal())
+            return delegated.getPowerFactor();
+        if (columnIndex == Column.PHASE.ordinal())
+            return delegated.getPhaseFromA();
+        if (columnIndex == Column.INDUCTIVE.ordinal())
+            return delegated.isIsInductive();
+        if (columnIndex == Column.REACTIVE.ordinal())
+            return delegated.isIsReactive();
+        if (columnIndex == Column.REVERSE.ordinal())
+            return delegated.isIsReverse();
+
+        return null;
     }
 
     @Override
     public void setValueAt(int columnIndex, Object value) {
-        switch (columnIndex) {
-            case 0:
-                delegated.setElementCurrent((double) value);
-                break;
-            case 1:
-                delegated.setElementVoltage((double) value);
-                break;
-            case 2:
-                delegated.setPowerFactor((double) value);
-                break;
-            case 3:
-                delegated.setPhaseFromA((double) value);
-                break;
-            case 4:
-                delegated.setIsInductive((Boolean) value);
-                break;
-            case 5:
-                delegated.setIsReactive((Boolean) value);
-                break;
-            case 6:
-                delegated.setIsReverse((Boolean) value);
-                break;
-        }
+        if (columnIndex == Column.CURRENT.ordinal())
+            delegated.setElementCurrent((double) value);
+        else if (columnIndex == Column.VOLTAGE.ordinal())
+            delegated.setElementVoltage((double) value);
+        else if (columnIndex == Column.ELEMENTS.ordinal())
+            delegated.setElements((Elements) value);
+        if (columnIndex == Column.POWER_FACTOR.ordinal())
+            delegated.setPowerFactor((double) value);
+        if (columnIndex == Column.PHASE.ordinal())
+            delegated.setPhaseFromA((double) value);
+        if (columnIndex == Column.INDUCTIVE.ordinal())
+            delegated.setIsInductive((Boolean) value);
+        if (columnIndex == Column.REACTIVE.ordinal())
+            delegated.setIsReactive((Boolean) value);
+        if (columnIndex == Column.REVERSE.ordinal())
+            delegated.setIsReverse((Boolean) value);
     }
 
     @Override
@@ -113,14 +122,15 @@ public class TestModelRowModelAdapter implements RowModel<TestModelRowModelAdapt
         if (matcher.find()) {
             model.setElementCurrent(stringToDouble(matcher.group(1)));
             model.setElementVoltage(stringToDouble(matcher.group(2)));
-            model.setPowerFactor(stringToDouble(matcher.group(3)));
-            model.setPhaseFromA(stringToDouble(matcher.group(4)));
+            model.setElements(Elements.valueOf(matcher.group(3)));
+            model.setPowerFactor(stringToDouble(matcher.group(4)));
+            model.setPhaseFromA(stringToDouble(matcher.group(5)));
 
-            model.setIsInductive(matcher.group(5).equalsIgnoreCase("true"));
-            model.setIsReactive(matcher.group(6).equalsIgnoreCase("true"));
-            model.setIsReverse(matcher.group(7).equalsIgnoreCase("true"));
+            model.setIsInductive(matcher.group(6).equalsIgnoreCase("true"));
+            model.setIsReactive(matcher.group(7).equalsIgnoreCase("true"));
+            model.setIsReverse(matcher.group(8).equalsIgnoreCase("true"));
         }
-        
+
         return new TestModelRowModelAdapter(model);
     }
 
@@ -138,16 +148,15 @@ public class TestModelRowModelAdapter implements RowModel<TestModelRowModelAdapt
                 }
             }
         }
-        
+
         return new TestModelRowModelAdapter(clone);
     }
 
     @Override
     public String toString() {
         final StringBuilder builder = new StringBuilder();
-        for(Field field: TestModel.class.getDeclaredFields()) {
+        for (Field field : TestModel.class.getDeclaredFields())
             builder.append(field.getName()).append("\t");
-        }
         builder.insert(builder.length() - 1, "\n");
         return builder.toString();
     }
