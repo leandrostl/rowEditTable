@@ -9,11 +9,13 @@ import com.metrum.table.RowTableFactory;
 import com.metrum.table.RowTableModel;
 import com.metrum.table.editor.EditModeDecorator;
 import com.metrum.table.editor.NumberDecorator;
+import com.metrum.table.renderer.TableCellRendererDecorator;
 import java.awt.BorderLayout;
 import java.awt.HeadlessException;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import javax.swing.DefaultCellEditor;
+import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -40,12 +42,15 @@ public class Main extends JPanel {
         JTable table = RowTableFactory.newDefaultInstance(model);
         RowTableFactory.createDefaultRenderer(table);
         RowTableFactory.setDefaultAttributes(table);
+        
         table.setDefaultEditor(Double.class,
                 new NumberDecorator(new DefaultCellEditor(new JFormattedTextField())));
 
         table.setDefaultEditor(Double.class,
                 new EditModeDecorator(table.getDefaultEditor(Double.class),
                         EditModeDecorator.EditMode.SELECT_ON_FOCUS));
+        
+        table.setDefaultEditor(Elements.class, new DefaultCellEditor(new JComboBox(Elements.values())));
 
         JScrollPane scroller = new JScrollPane(table);
         table.setPreferredScrollableViewportSize(new java.awt.Dimension(500, 300));

@@ -7,25 +7,29 @@ package com.metrum.table.renderer;
 
 import java.awt.Component;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
 public class ColumnResizeDecorator extends TableCellRendererDecorator {
 
+    public static int count = 0;
+    public static int count2 = 0;
+
     public static enum ColumnResizeMode {
 
         MIN, MAX, NONE
     };
-    
+
     private final ColumnResizeMode mode;
     private final int columnPadding;
     private final boolean considerData;
     private final boolean considerHeader;
-    
-    public ColumnResizeDecorator(TableCellRenderer delagated, ColumnResizeMode mode, 
+
+    public ColumnResizeDecorator(TableCellRenderer delagated, ColumnResizeMode mode,
             boolean considerHeader, boolean considerData, int columnPadding) {
         super(delagated);
-        
+
         this.mode = mode;
         this.considerHeader = considerHeader;
         this.considerData = considerData;
@@ -47,14 +51,14 @@ public class ColumnResizeDecorator extends TableCellRendererDecorator {
 
         final TableColumn column = table.getColumnModel().getColumn(col);
         int width = 0;
-        if(considerHeader)
+        if (considerHeader)
             width = getColumnHeaderWidth(table, col);
-        
-        if(considerData)
+
+        if (considerData)
             width = Math.max(getColumnDataWidth(table, col), width);
-        
+
         width += 2 * columnPadding;
-        
+
         switch (mode) {
             case MAX:
                 column.setMinWidth(width);
@@ -66,11 +70,11 @@ public class ColumnResizeDecorator extends TableCellRendererDecorator {
                 column.setPreferredWidth(width);
                 break;
         }
-        
+
         return super.getTableCellRendererComponent(table, value, isSelected,
                 hasFocus, row, col);
     }
-    
+
     /**
      * Calculate the width based on the widest cell renderer for the given column.
      */
@@ -107,12 +111,12 @@ public class ColumnResizeDecorator extends TableCellRendererDecorator {
     /**
      * Get the preferred width for the specified cell
      */
-    private int getCellDataWidth(JTable table, int row, int column) {      
+    private int getCellDataWidth(JTable table, int row, int column) {
         final Object value = table.getValueAt(row, column);
-        final Component component = delegated.getTableCellRendererComponent(table, value, false, 
-                false, row, column);
-        final int width = component.getPreferredSize().width + table.getIntercellSpacing().width;
-        return width;    
+        if (value == null)
+            return table.getIntercellSpacing().width;
+        final int width = table.getFontMetrics(table.getFont()).stringWidth(value.toString()) + table.getIntercellSpacing().width;
+        return width;
     }
 
 }
