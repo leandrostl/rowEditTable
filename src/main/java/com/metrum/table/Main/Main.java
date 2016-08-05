@@ -33,8 +33,8 @@ public class Main extends JPanel {
     }
 
     private void initComponents() {
-        RowTableModel<TestModelRowModelAdapter> model
-                = new RowTableModel<>(TestModelRowModelAdapter.class, TestModelRowModelAdapter.getColumns());
+        RowTableModel<TestModelRowModelAdapter> model = new RowTableModel<>(
+                TestModelRowModelAdapter.class, TestModelRowModelAdapter.getColumns());
         model.addRow();
 
         JTable table = RowTableFactory.newDefaultInstance(model);
