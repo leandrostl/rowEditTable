@@ -10,10 +10,12 @@ package com.metrum.table.Main;
  * @author leandro.lima
  */
 public class TestModel {
-    
+
     private double elementCurrent;
 
     private double elementVoltage;
+
+    private Elements elements;
 
     private double powerFactor;
 
@@ -26,14 +28,22 @@ public class TestModel {
     private boolean isReverse;
 
     public TestModel() {
-
+        this.elementCurrent = 0;
+        this.elementVoltage = 0;
+        this.elements = Elements.ABC;
+        this.powerFactor = 1;
+        this.phaseFromA = 0;
+        this.isReactive = false;
+        this.isInductive = false;
+        this.isReverse = false;
     }
 
-    public TestModel(double elementCurrent, double elementVoltage, 
-            double powerFactor, double phaseFromA, boolean isReactive, 
+    public TestModel(double elementCurrent, double elementVoltage, Elements elements,
+            double powerFactor, double phaseFromA, boolean isReactive,
             boolean isInductive, boolean isReverse) {
         this.elementCurrent = elementCurrent;
         this.elementVoltage = elementVoltage;
+        this.elements = elements;
         this.powerFactor = powerFactor;
         this.phaseFromA = phaseFromA;
         this.isReactive = isReactive;
@@ -55,6 +65,14 @@ public class TestModel {
 
     public void setElementVoltage(double elementVoltage) {
         this.elementVoltage = elementVoltage;
+    }
+
+    public Elements getElements() {
+        return elements;
+    }
+
+    public void setElements(Elements elements) {
+        this.elements = elements;
     }
 
     public double getPowerFactor() {
@@ -96,9 +114,5 @@ public class TestModel {
     public void setIsReverse(boolean isReverse) {
         this.isReverse = isReverse;
     }
-    
-    
-
-    
 
 }

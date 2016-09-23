@@ -10,6 +10,7 @@ import com.metrum.table.action.InsertRowsAction;
 import com.metrum.table.renderer.AlternateRowDecorator;
 import com.metrum.table.renderer.ColumnAlignmentDecorator;
 import com.metrum.table.renderer.ColumnPaddingDecorator;
+import com.metrum.table.renderer.ColumnResizeDecorator;
 import java.awt.Color;
 import java.awt.event.KeyEvent;
 import javax.swing.Action;
@@ -43,7 +44,7 @@ public final class RowTableFactory {
                 return getPreferredSize().width < getParent().getWidth();
             }
         };
-        
+
         for (int col = 0; col < table.getColumnCount(); col++) {
             final TableCellRenderer defaultRenderer = (new JTable()).getDefaultRenderer(table.
                     getColumnClass(col));
@@ -65,12 +66,15 @@ public final class RowTableFactory {
             final TableCellRenderer defaultRenderer = (new JTable()).getDefaultRenderer(table.
                     getColumnClass(col));
             TableColumn column = table.getColumnModel().getColumn(col);
-            
+
             column.setCellRenderer(new AlternateRowDecorator(defaultRenderer, Color.LIGHT_GRAY,
                     1, 1));
-            
+
             column.setCellRenderer(new ColumnAlignmentDecorator(column.getCellRenderer(),
                     JLabel.CENTER, JLabel.CENTER));
+            
+            column.setCellRenderer(new ColumnResizeDecorator(column.
+                    getCellRenderer(), ColumnResizeDecorator.ColumnResizeMode.NONE, true, true, 5));
 
         }
     }

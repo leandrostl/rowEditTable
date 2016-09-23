@@ -25,7 +25,9 @@ public class NumberFormatDecorator extends TableCellRendererDecorator {
     public Component getTableCellRendererComponent(JTable table, Object value,
             boolean isSelected, boolean hasFocus, int row, int column) {
 
-        Component component = super.getTableCellRendererComponent(table, doubleToString((Double) value, 2),
+        
+        Component component = super.getTableCellRendererComponent(table, 
+                value instanceof String ? value : doubleToString((Double) value, 2),
                 isSelected, hasFocus, row, column);
         return component;
 
