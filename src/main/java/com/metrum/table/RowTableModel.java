@@ -167,5 +167,8 @@ public class RowTableModel<T extends RowModel> extends AbstractTableModel {
 
         insertRowsAt(rowIndex, list);
     }
+    public void update(){
+        fireTableChanged(new TableModelEvent(this));
+    }
 
 }
